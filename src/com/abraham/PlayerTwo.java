@@ -20,9 +20,6 @@ public class PlayerTwo extends Entity{
     }
 
 
-    public int getHealth(){
-        return health;
-    }
 
     @Override
     public void frame() {
