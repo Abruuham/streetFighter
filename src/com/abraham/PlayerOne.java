@@ -35,7 +35,7 @@ public class PlayerOne extends Player{
     private Animate jump;
 
 
-    private final int JUMP_SPEED = -10;
+    private final int JUMP_SPEED = -15;
 
 
 
@@ -51,9 +51,6 @@ public class PlayerOne extends Player{
         this.game = game;
 
         health = 100;
-        System.out.println(x);
-
-
 
         standing = new Animate(110, Images.standing);
         walkLeft = new Animate(100, Images.walkingLeft);
@@ -75,8 +72,8 @@ public class PlayerOne extends Player{
             x = 0;
         }
         // check to see if the player is at the d edge of the screen
-        if(x > Main.WINDOW_WIDTH  * 2){
-            x = Main.WINDOW_WIDTH  * 2;
+        if(x > Main.WINDOW_WIDTH ){
+            x = Main.WINDOW_WIDTH ;
         }
     }
 
@@ -100,7 +97,7 @@ public class PlayerOne extends Player{
         walkRight.timer();
 
 
-        if (y == 275) {
+        if (y == 350) {
 
             // if press d, move forward
             if (game.getKey().d ) {
@@ -141,12 +138,12 @@ public class PlayerOne extends Player{
 
 
 
-        if(y < 275){
+        if(y < 350){
             fall();
         }
         // if player clips through floor, set y to floor
-        if (y > 275)
-            y = 275;
+        if (y > 350)
+            y = 350;
 
         // check edges of screen
         checkWalls();
@@ -187,16 +184,17 @@ public class PlayerOne extends Player{
     public void render(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
         g.setColor(new Color(0,0,0, 150));
-        g.fillOval((int) (x), 188 * Main.SCALE, 80, 16);
+        g.fillOval((int) (x), 260 * Main.SCALE, 160, 16);
 
         if (animations[Walking_Right]) {
-            g.drawImage(getCurrentAnimFrame(), (int) (x - 5), (int) (y + 10), null);
+
+            g.drawImage(getCurrentAnimFrame(), (int) x - 5, (int) y, getCurrentAnimFrame().getWidth() * 2, getCurrentAnimFrame().getHeight() * 2,null);
         } else if (animations[Walking_Left]) {
-            g.drawImage(getCurrentAnimFrame(), (int) (x - 5), (int) (y + 10), null);
+            g.drawImage(getCurrentAnimFrame(), (int) x - 5, (int) y, getCurrentAnimFrame().getWidth() * 2, getCurrentAnimFrame().getHeight() * 2,null);
         } else if (animations[Jumping]){
-            g.drawImage(getCurrentAnimFrame(), (int) x - 5, (int) y - 30, null);
+            g.drawImage(getCurrentAnimFrame(), (int) x - 5, (int) y - 130, getCurrentAnimFrame().getWidth() * 2, getCurrentAnimFrame().getHeight() * 2,null);
         } else {
-            g.drawImage(getCurrentAnimFrame(), (int) x, (int) y , null);
+            g.drawImage(getCurrentAnimFrame(), (int) x, (int) y , getCurrentAnimFrame().getWidth() * 2, getCurrentAnimFrame().getWidth() * 2,null);
         }
     }
 }

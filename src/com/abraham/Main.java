@@ -11,8 +11,8 @@ import java.io.IOException;
 public class Main extends Canvas implements Runnable {
 
     public static final String GAME_TITLE = "Street Fighter";
-    public static final int WINDOW_WIDTH = 400;
-    public static final int WINDOW_HEIGHT = 220;
+    public static final int WINDOW_WIDTH = 1280;
+    public static final int WINDOW_HEIGHT = 605;
     public static final int SCALE = 2;
 
     private GameState gameState;
@@ -23,7 +23,7 @@ public class Main extends Canvas implements Runnable {
 
     public Main(){
         frame = new JFrame(GAME_TITLE);
-        frame.setSize(WINDOW_WIDTH * SCALE, WINDOW_HEIGHT * SCALE);
+        frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
 
@@ -140,9 +140,8 @@ public class Main extends Canvas implements Runnable {
 
         /* ALL DRAWING HERE */
 
-        ImageIcon forestStage = new ImageIcon(Main.class.getResource("/forest_stage.gif"));
-
-        g.drawImage(forestStage.getImage(), -800, -220, forestStage.getIconWidth() * 2, forestStage.getIconHeight() * 2,null);
+        ImageIcon forestStage = new ImageIcon(Main.class.getResource("/ussr.gif"));
+        g.drawImage(forestStage.getImage(), 0, 0,forestStage.getIconWidth()  , forestStage.getIconHeight()  ,null);
 
 
         // if current state exist, then render

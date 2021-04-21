@@ -14,7 +14,7 @@ public class GameState extends State{
     public GameState(Main game){
         super(game);
 
-        p1 = new PlayerOne(game, 60, 275);
+        p1 = new PlayerOne(game, 60, 350);
     }
 
 
