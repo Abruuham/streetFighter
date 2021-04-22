@@ -24,6 +24,8 @@ public class PlayerOne extends Player{
     private final int CROUCHING      = 3;
     private final int Jumping        = 9;
 
+    private final int MAX_SPEED = 2;
+
 
     // dummy var for checks
     private final int DUMMY = 19;
@@ -35,7 +37,7 @@ public class PlayerOne extends Player{
     private Animate jump;
 
 
-    private final int JUMP_SPEED = -15;
+    private final int JUMP_SPEED = -18;
 
 
 
@@ -55,7 +57,7 @@ public class PlayerOne extends Player{
         standing = new Animate(110, Images.standing);
         walkLeft = new Animate(100, Images.walkingLeft);
         walkRight = new Animate(110, Images.walkingRight);
-        jump = new Animate(60, Images.jump);
+        jump = new Animate(75, Images.jump);
 
     }
 
@@ -98,7 +100,6 @@ public class PlayerOne extends Player{
 
 
         if (y == 350) {
-
             // if press d, move forward
             if (game.getKey().d ) {
                 velocityX = 2;
@@ -136,8 +137,6 @@ public class PlayerOne extends Player{
         // wdate horizontal pos.
         x += velocityX;
 
-
-
         if(y < 350){
             fall();
         }
@@ -152,7 +151,21 @@ public class PlayerOne extends Player{
     public void fall(){
         velocityY += GRAVITY;
 
+        // if greater than max speed, just equal max speed
+        if (velocityY > MAX_SPEED){
+            velocityY = MAX_SPEED + 3;
+        }
+
+        // if horizontally still...
+        if (velocityX == 0) {
+            // jump anims
+            if (jump.getFrame() >= 3 && jump.getFrame() <= 4) {
+                velocityY = 0;
+            }
+        }
+
         y += velocityY;
+
 
     }
 
@@ -165,6 +178,7 @@ public class PlayerOne extends Player{
 
         // except active anim
         animations[unchanged] = true;
+
     }
 
 
@@ -186,13 +200,14 @@ public class PlayerOne extends Player{
         g.setColor(new Color(0,0,0, 150));
         g.fillOval((int) (x), 260 * Main.SCALE, 160, 16);
 
+
         if (animations[Walking_Right]) {
 
-            g.drawImage(getCurrentAnimFrame(), (int) x - 5, (int) y, getCurrentAnimFrame().getWidth() * 2, getCurrentAnimFrame().getHeight() * 2,null);
+            g.drawImage(getCurrentAnimFrame(), (int) x , (int) y, getCurrentAnimFrame().getWidth() * 2, getCurrentAnimFrame().getHeight() * 2,null);
         } else if (animations[Walking_Left]) {
-            g.drawImage(getCurrentAnimFrame(), (int) x - 5, (int) y, getCurrentAnimFrame().getWidth() * 2, getCurrentAnimFrame().getHeight() * 2,null);
+            g.drawImage(getCurrentAnimFrame(), (int) x , (int) y, getCurrentAnimFrame().getWidth() * 2, getCurrentAnimFrame().getHeight() * 2,null);
         } else if (animations[Jumping]){
-            g.drawImage(getCurrentAnimFrame(), (int) x - 5, (int) y - 130, getCurrentAnimFrame().getWidth() * 2, getCurrentAnimFrame().getHeight() * 2,null);
+            g.drawImage(getCurrentAnimFrame(), (int) x - 5, (int) y - 25, getCurrentAnimFrame().getWidth() * 2, getCurrentAnimFrame().getHeight() * 2,null);
         } else {
             g.drawImage(getCurrentAnimFrame(), (int) x, (int) y , getCurrentAnimFrame().getWidth() * 2, getCurrentAnimFrame().getWidth() * 2,null);
         }
