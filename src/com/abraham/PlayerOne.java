@@ -155,6 +155,14 @@ public class PlayerOne extends Player{
 
         checkCollision();
 
+        if (hit) {
+            if (System.currentTimeMillis() - prevTime > 400) {
+                animations[getMovement("Hit")] = false;
+                hit = false;
+                prevTime += 400;
+            }
+        }
+
         // update horizontal pos.
         x += velocityX;
 
