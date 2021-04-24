@@ -1,7 +1,11 @@
 package com.abraham;
 
 import java.awt.*;
+import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 
 public class PlayerOne extends Player{
@@ -11,18 +15,18 @@ public class PlayerOne extends Player{
     private int velocityX, velocityY;
     private Main game;
     private boolean[] animations = new boolean[20];
+    private boolean hit;
+    private long prevTime;
 
-    private final String movements[] = {"Standing", "Walk_Right", "Walk_Left", "Crouching", "Jumping", "Front_Flip", "Back_Flip"};
+    // Array of basic movements that Player One can perform
+    private final String movements[] = {"Standing", "Walking_Right", "Walking_Left", "crouching", "Jumping", "Hit"};
+
+    // Array of basic attacks that Player One can perform
     private final String attacks[] = {"Attack_V", "Attack_B", "Crouch_Attack"};
 
     private final int GRAVITY = 1;
 
-    // basic movement
-    private final int Standing         = 0;
-    private final int Walking_Right     = 1;
-    private final int Walking_Left     = 2;
-    private final int CROUCHING      = 3;
-    private final int Jumping        = 9;
+
 
     private final int MAX_SPEED = 2;
 
@@ -54,6 +58,7 @@ public class PlayerOne extends Player{
 
         health = 100;
 
+        // Sets the frame rate of the the animations, the higher the frame rate the slower it will be cycled through
         standing = new Animate(110, Images.standing);
         walkLeft = new Animate(100, Images.walkingLeft);
         walkRight = new Animate(110, Images.walkingRight);
@@ -64,9 +69,23 @@ public class PlayerOne extends Player{
 
     public void checkCollision(){
         // check if the enemies hit box has intersected with the current players hit box
-//        if(game.getGameState().getPlayerOneAttackBounds().intersects(getHitBounds())){
-//
-//        }
+        if(game.getGameState().getPlayerTwoHitBounds().intersects(getBlankaHitBound())){
+
+            // if not already hit
+            if (!hit) {
+                handleAnimation(getMovement("Hit"));
+                prevTime = System.currentTimeMillis();
+                hit = true;
+                health-=5;
+            }
+
+            try {
+                TimeUnit.MILLISECONDS.sleep(30);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
     public void checkWalls(){
         // check to see if player is at a edge of the screen
@@ -84,9 +103,9 @@ public class PlayerOne extends Player{
         return health;
     }
 
-//    public Rectangle getHitBounds(){
-//        return 0;
-//    }
+    public Rectangle getBlankaHitBound(){
+        return new Rectangle((int)x, (int)y, getCurrentAnimFrame().getWidth() + 80, getCurrentAnimFrame().getHeight() + 85);
+    }
 
 
     @Override
@@ -104,37 +123,39 @@ public class PlayerOne extends Player{
             if (game.getKey().d ) {
                 velocityX = 2;
                 // reset and init true to state
-                handleAnimation(Walking_Right);
+                handleAnimation(getMovement("Walking_Right"));
             } else if(game.getKey().a ){
                 velocityX = -2;
                 // reset and init true to state
-                handleAnimation(Walking_Left);
+                handleAnimation(getMovement("Walking_Left"));
             } else if (game.getKey().w) {
                 velocityY = JUMP_SPEED - 2;
                 y-=1;
                 jump.pos = 0;
-                handleAnimation(Jumping);
+                handleAnimation(getMovement("Jumping"));
             } else {
 
                 velocityX = 0;
                 velocityY = 0;
 
                 // reset animations that are instantaneous (only activate when pressed)
-                animations[CROUCHING] = false;
-                animations[Walking_Left] = false;
-                animations[Walking_Right] = false;
-                animations[Jumping] = false;
+                animations[getMovement("crouching")] = false;
+                animations[getMovement("Walking_Left")] = false;
+                animations[getMovement("Walking_Right")] = false;
+                animations[getMovement("Jumping")] = false;
 
                 // if only dummy boolean is active, then idle
                 if (animations[DUMMY]) {
-                    handleAnimation(Standing);
+                    handleAnimation(Arrays.asList(movements).indexOf("Standing"));
                 }
 
             }
             // otherwise, player is in air
         }
 
-        // wdate horizontal pos.
+        checkCollision();
+
+        // update horizontal pos.
         x += velocityX;
 
         if(y < 350){
@@ -183,15 +204,19 @@ public class PlayerOne extends Player{
 
 
     private BufferedImage getCurrentAnimFrame() {
-        if (animations[Walking_Right]) {
+        if (animations[getMovement("Walking_Right")]) {
             return walkRight.getCurrentFrame();
-        } else if(animations[Walking_Left]){
+        } else if(animations[getMovement("Walking_Left")]){
             return walkLeft.getCurrentFrame();
-        } else if(animations[Jumping]){
+        } else if(animations[getMovement("Jumping")]){
             return jump.getCurrentFrame();
         }
         else return standing.getCurrentFrame();
 
+    }
+
+    private int getMovement(String str){
+        return Arrays.asList(movements).indexOf(str);
     }
 
     @Override
@@ -199,14 +224,20 @@ public class PlayerOne extends Player{
         Graphics2D g2d = (Graphics2D) g;
         g.setColor(new Color(0,0,0, 150));
         g.fillOval((int) (x), 260 * Main.SCALE, 160, 16);
+        Random rand = new Random();
+
+        if (hit) {
+            int k = rand.nextInt(3);
+            g2d.translate(-k, k);
+        }
 
 
-        if (animations[Walking_Right]) {
+        if (animations[getMovement("Walking_Right")]) {
 
             g.drawImage(getCurrentAnimFrame(), (int) x , (int) y, getCurrentAnimFrame().getWidth() * 2, getCurrentAnimFrame().getHeight() * 2,null);
-        } else if (animations[Walking_Left]) {
+        } else if (animations[getMovement("Walking_Left")]) {
             g.drawImage(getCurrentAnimFrame(), (int) x , (int) y, getCurrentAnimFrame().getWidth() * 2, getCurrentAnimFrame().getHeight() * 2,null);
-        } else if (animations[Jumping]){
+        } else if (animations[getMovement("Jumping")]){
             g.drawImage(getCurrentAnimFrame(), (int) x - 5, (int) y - 25, getCurrentAnimFrame().getWidth() * 2, getCurrentAnimFrame().getHeight() * 2,null);
         } else {
             g.drawImage(getCurrentAnimFrame(), (int) x, (int) y , getCurrentAnimFrame().getWidth() * 2, getCurrentAnimFrame().getWidth() * 2,null);

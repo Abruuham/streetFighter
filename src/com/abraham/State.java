@@ -27,8 +27,8 @@ public abstract class State {
 
     public abstract void timer();
 
-    public abstract Rectangle getPlayerOneAttackBounds();
-    public abstract Rectangle getPlayerTwoAttackBounds();
+    public abstract Rectangle getPlayerOneHitBounds();
+    public abstract Rectangle getPlayerTwoHitBounds();
 
 
 

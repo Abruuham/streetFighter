@@ -19,9 +19,7 @@ public class Images {
     public static BufferedImage[] kick = new BufferedImage[14];
 
     public static void init() throws IOException{
-//        Debugging to see what files were in the directory
-//        File file = new File("./src/images");
-//        for(String fileNames : file.list()) System.out.println(fileNames);
+
         SpriteSheet walkLeft = new SpriteSheet(ImageLoader.loadImage("movingFoward.png"));
         SpriteSheet stand = new SpriteSheet(ImageLoader.loadImage("standing.png"));
         SpriteSheet jumping = new SpriteSheet(ImageLoader.loadImage("jump.png"));
@@ -40,8 +38,7 @@ public class Images {
         for (int i = 0; i < 3; i++)
             walkingRight[i] = walkLeft.crop(94, 104, 94 * i, 0);
 
-        //crouch[0] = crouch.crop(54, 73, 0, 0);
-
+        // Filling jump array with images
         jump[0] = jumping.crop(71, 128, 0, 0);
         jump[1] = jumping.crop(71, 128, 0, 0);
         for(int i = 2; i < 5; i++){
@@ -60,15 +57,6 @@ public class Images {
         jump[12] = jumping.crop(71, 128, 0, 0);
         jump[13] = jumping.crop(71, 128, 0, 0);
 
-//        jump[7] = jumping.crop(82, 128, 82*6, 0);
-//        jump[8] = jumping.crop(110, 128, 110*7, 0);
-//        jump[9] = jumping.crop(110, 128, 110*7, 0);
-//        jump[10] = jumping.crop(71, 128, 82*8, 0);
-//        jump[11] = jumping.crop(71, 128, 82*9, 0);
-//        jump[12] = jumping.crop(71, 128, 82*10, 0);
-
-//        for (int i = 3; i < 13; i++)
-//            jump[i] = jumping.crop(70, 128, 70 * (i - 2), 0);
     }
 
 }
